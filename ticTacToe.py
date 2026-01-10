@@ -4,6 +4,14 @@ def reset_board():
 
 board = reset_board()
 
+score = {
+    "X": 0,
+    "O": 0
+}
+
+def print_score():
+    print(f"Score - Player X: {score['X']} | Player O: {score['O']}\n")
+
 # function to print the current stat of the board
 def print_board():
     print(f"{board[0]} | {board[1]} | {board[2]}")
@@ -47,7 +55,6 @@ def check_winner(player):
     for combo in win_combinations:
         if board[combo[0]] == board[combo[1]] == board[combo[2]] == player:
             return True
-        
     return False
 
 #function to check for draw
