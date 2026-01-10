@@ -73,11 +73,14 @@ def play_game():
         if check_winner(current_player):
             print_board()
             print(f"Player {current_player} wins!")
+            score[current_player] += 1
+            print_score()
             break
         
         if check_draw():
             print_board()
             print("It's a draw!")
+            print_score()
             break
             
         if current_player == "X":
