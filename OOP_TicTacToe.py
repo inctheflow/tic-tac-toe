@@ -1,4 +1,34 @@
+import random
+
 class TicTacToe:
+   def computer_move(self):
+       #1. computer going for win
+       for i in range(9):
+           if self.board[i] == ' ':
+               self.board[i] = 'O'
+               if self.check_winner('O'):
+                   print(f"computer chose position {i}.\n")
+                   return
+               self.board[i] = ' '
+        
+        #2. computer blocking player win
+       for i in range(9):
+           if self.board[i] == ' ':
+               self.board[i] = 'X'
+               if self.check_winner('X'):
+                   self.board[i] = 'O'
+                   print(f"Computer chose position{i}.\n")
+                   return
+               self.board[i] = ' '
+       
+       
+       # random move for computer
+       available_moves = [i for i, spot in enumerate(self.board) if spot == ' ']
+       move = random.choice(available_moves)
+       self.board[move] = 'O'
+       print(f"computer chose positon {move}")
+     
+
    def __init__(self):
       self.board = [' '] * 9
       self.current_player = 'X'
@@ -34,14 +64,14 @@ class TicTacToe:
           self.board[move] = self.current_player
           break
      
-   def check_winner(self):
+   def check_winner(self, player):
      win_combinations = [
           (0, 1, 2), (3, 4, 5), (6, 7, 8),
           (0, 3, 6), (1, 4, 7), (2, 5, 8),
           (0, 4, 8), (2, 4, 6)
      ]
      for a, b, c in win_combinations:
-        if self.board[a] == self.board[b] == self.board[c] == self.current_player:
+        if self.board[a] == self.board[b] == self.board[c] == player:
             return True
         
           
@@ -56,9 +86,13 @@ class TicTacToe:
      
      while True:
           self.print_board()
-          self.player_move()
+          #self.player_move()
+          if self.current_player == 'X':
+              self.player_move()
+          else:
+              self.computer_move()
 
-          if self.check_winner():
+          if self.check_winner(self.current_player):
                self.print_board()
                print(f"Player {self.current_player} wins!")
                self.score[self.current_player] += 1
