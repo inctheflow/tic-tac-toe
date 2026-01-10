@@ -1,6 +1,13 @@
 import random
 
 class TicTacToe:
+   
+   def __init__(self):
+      self.board = [' '] * 9
+      self.current_player = 'X'
+      self.score = {'X':0, 'O':0}
+      self.game_mode = None #"Human" or "AI"
+
    def computer_move(self):
        #1. computer going for win
        for i in range(9):
@@ -47,11 +54,7 @@ class TicTacToe:
 
      
 
-   def __init__(self):
-      self.board = [' '] * 9
-      self.current_player = 'X'
-      self.score = {'X':0, 'O':0}
-      self.game_mode = None #"Human" or "AI"
+   
       
    def print_board(self):
         print()
