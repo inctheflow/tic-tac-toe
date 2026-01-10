@@ -27,12 +27,31 @@ class TicTacToe:
        move = random.choice(available_moves)
        self.board[move] = 'O'
        print(f"computer chose positon {move}")
+   
+   def choose_game_mode(self):
+       while True:
+           print("Choose Game Mode:")
+           print("1. Human vs Human")
+           print("2. Human vs Computer")
+           mode = input("Enter 1 or 2: ")
+
+           if mode == '1':
+               self.game_mode = "HUMAN"
+               break
+           elif mode == '2':
+               self.game_mode = 'AI'
+               break
+           else:
+               print("Invalid choice. Try again.")
+            
+
      
 
    def __init__(self):
       self.board = [' '] * 9
       self.current_player = 'X'
       self.score = {'X':0, 'O':0}
+      self.game_mode = None #"Human" or "AI"
       
    def print_board(self):
         print()
@@ -87,10 +106,10 @@ class TicTacToe:
      while True:
           self.print_board()
           #self.player_move()
-          if self.current_player == 'X':
-              self.player_move()
-          else:
+          if self.game_mode == 'AI' and self.current_player == 'O':
               self.computer_move()
+          else:
+              self.player_move()
 
           if self.check_winner(self.current_player):
                self.print_board()
@@ -109,7 +128,7 @@ class TicTacToe:
      print(f'Score - Player X: {self.score["X"]}, Player O: {self.score["O"]}\n')
 
 game = TicTacToe()
-
+game.choose_game_mode()
 while True:
      game.play_game()
      game.print_score()
