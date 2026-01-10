@@ -1,4 +1,8 @@
-board = [" "] * 9
+
+def reset_board():
+    return [" "] * 9
+
+board = reset_board()
 
 # function to print the current stat of the board
 def print_board():
@@ -43,31 +47,41 @@ def check_winner(player):
     for combo in win_combinations:
         if board[combo[0]] == board[combo[1]] == board[combo[2]] == player:
             return True
-        else:
-            return False
+        
+    return False
 
 #function to check for draw
 def check_draw():
     return " " not in board
 
-# Game loop which alternates player
-current_player = "X"
+# Game loop which alternates players and checks for win/draw conditions
+def play_game():
+    global board
+    board = reset_board()
+    current_player = "X"
+    while True:
+        print_board()
+        player_move(current_player)
+
+        if check_winner(current_player):
+            print_board()
+            print(f"Player {current_player} wins!")
+            break
+        
+        if check_draw():
+            print_board()
+            print("It's a draw!")
+            break
+            
+        if current_player == "X":
+            current_player = "O"
+        else:
+            current_player = "X"
+    
 while True:
-    print_board()
-    player_move(current_player)
+    play_game()
 
-    if check_winner(current_player):
-        print_board()
-        print(f"Player {current_player} wins!")
+    replay = input("Do you want to play again? (Y/N):").upper()
+    if replay != "Y":
+        print("Thanks for playing TIC TAC TOE by INCTHEFLOW")
         break
-
-    if check_draw():
-        print_board()
-        print("It's a draw!")
-        break
-
-    if current_player == "X":
-        current_player = "O"
-    else:
-        current_player = "X"
-
