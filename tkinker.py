@@ -28,7 +28,7 @@ class TicTacToe:
     def check_draw(self):
         return ' ' not in self.board
     
-    def reser(self):
+    def reset(self):
         self.board = [' '] * 9
         self.current_player = 'X'
 
