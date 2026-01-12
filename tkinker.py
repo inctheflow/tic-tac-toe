@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
+
 class TicTacToe:
     def __init__(self):
         self.board = [' '] * 9
@@ -23,10 +24,14 @@ class TicTacToe:
             (0, 3, 6), (1, 4, 7), (2, 5, 8),
             (0, 4, 8), (2, 4, 6)
         ]
-        return any(
-            self.board[a] == self.board[b] == self.board[c] == player
-            for a, b, c in win_combinations
-        )
+
+        for combo in win_combinations:
+            a, b, c = combo
+            if self.board[a] == self.board[b] == self.board[c] == player:
+                return combo
+
+        return None
+        
     
     def check_draw(self):
         return ' ' not in self.board
@@ -63,9 +68,16 @@ class TicTacToe:
 game = TicTacToe()
 root = tk.Tk()
 root.title("TIC TAC TOE by INCTHEFLOW")
+score_x = 0
+score_o = 0
+score_draw = 0
+
 
 mode_label = tk.Label(root, text = "Select Game Mode: ", font = ("Arial", 14))
 mode_label.grid(row = 0, column = 0, columnspan = 3)
+
+score_label = tk.Label(root, text = "X: 0   O: 0   Draws: 0", font = ("Arial", 12))
+score_label.grid(row = 5, column = 0, columnspan = 3)
 
 def set_human_mode():
     game.game_mode = "HUMAN"
@@ -76,6 +88,15 @@ def set_ai_mode():
     game.game_mode = "AI"
     reset_gui()
     enable_board()
+
+def highlight_winner(combo):
+    for i in combo:
+        buttons[i].config(bg = "lightgreen")
+    
+def update_score():
+    score_label.config(text=f"x: {score_x} o: {score_o} Draws: {score_draw}")
+
+
 
 human_button = tk.Button(root, text = "Human vs Human", command = set_human_mode)
 ai_button = tk.Button(root, text = "Human vs Computer", command = set_ai_mode)
@@ -109,14 +130,20 @@ def on_click(index):
     buttons[index].config(text = game.board[index], state = "disabled")
     root.update_idletasks()
 
+    winner_combo = game.check_winner(player)
+    if winner_combo:
+        end_game(f"Player {player} wins!", player, winner_combo)
+        return
+
+    '''
     if game.check_winner(player):
-            messagebox.showinfo("Game Over", f"Player {player} wins!")
-            reset_gui()
+            highlight_winner(winner_combo)
+            root.after(500, lambda : messagebox.showinfo("Game Over", f"Player {player} wins!"))
+            root.after(600, reset_gui())
             return
-        
+            '''    
     if game.check_draw():
-            messagebox.showinfo("Game Over It's a draw!")
-            reset_gui()
+            end_game("Game Over It's a draw!")
             return
 
     game.switch_player()
@@ -127,13 +154,19 @@ def on_click(index):
             buttons[ai_index].config(text = "O", state = "disabled")
             root.update_idletasks()
 
-            if game.check_winner('O'):
+            winner_combo = game.check_winner('O')
+
+            if winner_combo:
+                end_game("Computer Wins!", 'O', winner_combo)
+                return
+
+            '''if game.check_winner('O'):
                 messagebox.showinfo("Game Over", "Computer Wins!")
                 reset_gui()
-                return
+                return'''
         
             if game.check_draw():
-                messagebox.showinfo("Game Over", "It's a draw!")
+                end_game("Game Over It's a draw!")
                 reset_gui()
                 return
         
@@ -142,8 +175,28 @@ def on_click(index):
 def reset_gui():
     game.reset()
     for button in buttons:
-        button.config(text = " ", state = "disabled")
+        button.config(text = " ", state = "disabled", bg = "SystemButtonFace")
 
+def end_game(message, winner = None, combo = None):
+    global score_x, score_o, score_draw
+    if winner == 'X':
+        score_x += 1
+    elif winner == 'O':
+        score_o += 1
+    else:
+        score_draw += 1
+
+    update_score()
+    if combo:
+        highlight_winner(combo)
+        root.update_idletasks()
+    
+    root.after(600, show_end_message, message)
+    
+
+def show_end_message(message):
+    messagebox.showinfo("Game Over", message)
+    reset_gui()
 
 for i in range(9):
     button = tk.Button(root, text = " ", width = 6, height = 4, font =("Arial", 20),
