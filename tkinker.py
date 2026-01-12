@@ -106,43 +106,43 @@ def on_click(index):
         return
 
     #if game.make_move(index):
-        buttons[index].config(text = game.board[index], state = "disabled")
-        root.update_idletasks()
+    buttons[index].config(text = game.board[index], state = "disabled")
+    root.update_idletasks()
 
-        if game.check_winner(player):
+    if game.check_winner(player):
             messagebox.showinfo("Game Over", f"Player {player} wins!")
             reset_gui()
             return
         
-        if game.check_draw():
+    if game.check_draw():
             messagebox.showinfo("Game Over It's a draw!")
             reset_gui()
             return
 
-        game.switch_player()
+    game.switch_player()
 
-        if game.game_mode == "AI" and game.current_player == 'O':
+    if game.game_mode == "AI" and game.current_player == 'O':
             ai_index = game.computer_move()
             game.make_move(ai_index)
             buttons[ai_index].config(text = "O", state = "disabled")
             root.update_idletasks()
 
-        if game.check_winner('O'):
-            messagebox.showinfo("Game Over", "Computer Wins!")
-            reset_gui()
-            return
+            if game.check_winner('O'):
+                messagebox.showinfo("Game Over", "Computer Wins!")
+                reset_gui()
+                return
         
-        if game.check_draw():
-            messagebox.showinfo("Game Over", "It's a draw!")
-            reset_gui()
-            return
+            if game.check_draw():
+                messagebox.showinfo("Game Over", "It's a draw!")
+                reset_gui()
+                return
         
-        game.switch_player()
+            game.switch_player()
 
 def reset_gui():
     game.reset()
     for button in buttons:
-        button.config(text = " ", state = "normal")
+        button.config(text = " ", state = "disabled")
 
 
 for i in range(9):
